@@ -1,0 +1,11 @@
+{% extends 'yougetapp/yg_main.html' %}
+
+{% block url %}
+<div id="url_form_container">
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ url_form.as_p }}
+    <input id="url_submit_btn" type="submit" value="Process"/>
+  </form>
+</div>
+{% endblock %}
