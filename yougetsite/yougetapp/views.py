@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from .models import FileData, ExtType, AudioQuality, VideoQuality, SessionKey, DlData
 from .forms import UrlForm, QualityForm
@@ -118,3 +118,16 @@ class PrepareDownload(View):
 
         return JsonResponse(dl_file_data.pk, safe=False)
 
+def user_download(requet, pk):
+    dl_file_data = get_object_or_404(DlData, id=pk)
+    file_session = dl_file_data.session.session_key
+    file_dir = settings.MEDIA_ROOT +file_session
+    format_type = dl_file_data.quality_object.ext.ext_name
+    mime = dl_file_data.quality_object.ext.mime_type
+    file_name = dl_file_data.file.file_name + '-' + str(dl_file_data.id) + '.' + format_type
+    file_path = file_dir + '/' + file_name
+    with open(file_path, 'rb') as file:
+        response = HttpResponse(file, content_type=mime)
+        response['Content-Disposition'] = f'attachement; filename="{file_name}"'
+    
+    return response

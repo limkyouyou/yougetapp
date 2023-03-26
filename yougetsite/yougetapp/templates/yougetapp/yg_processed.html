@@ -16,6 +16,7 @@
   {{ quality_form.as_p }}
   <input id="prepare_btn" type="submit" value="Prepare"/>
 </form>
+<div id="dl_btn_container"></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script type="text/javascript">
@@ -28,7 +29,10 @@
       url: "{% url 'yougetapp:ygprepare' file_data.id %}",
       data: form_data,
       success: function(json){
-        console.log(json)
+        dlUrl = "window.location.href='" + "{% url 'yougetapp:download' 0 %}';".replace('0', json);
+        $("#dl_btn_container").append(
+          '<button id="dl_btn" onclick="' + dlUrl + '" download>Download</hutton'
+        );
       },
       error: function(xhr, errmsg, err){
         console.log(xhr.status + ":" + xhr.responseText);
