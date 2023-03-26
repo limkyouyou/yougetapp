@@ -6,4 +6,9 @@
 {{ title }}
 {{ thumbnail }}
 {{ uploader }}
+<form id="quality_form" method="post">
+  {% csrf_token %}
+  {{ quality_form.as_p }}
+  <input id="prepare_btn" type="submit" value="Prepare"/>
+</form>
 {% endblock %}

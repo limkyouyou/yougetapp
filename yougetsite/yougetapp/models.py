@@ -61,7 +61,7 @@ class VideoQuality(models.Model):
 class AudioQuality(models.Model):
     ext = models.ForeignKey('ExtType', on_delete=models.CASCADE)
 
-    audio_quality = models.CharField(max_length=4)
+    audio_quality = models.CharField(max_length=5)
 
     dl_data = GenericRelation(DlData, null=True)
 

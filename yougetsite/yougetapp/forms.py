@@ -21,3 +21,11 @@ class UrlForm(forms.Form):
             return
         else:
             self.add_error('url', 'Please enter a valid Youtube URL which starts with https://')
+
+class QualityForm(forms.Form):
+    choice_list = forms.ChoiceField()
+    def __init__(self, quality_list, *args, **kwargs):
+        self.QUALITY_LIST = quality_list
+        super(QualityForm, self).__init__(*args, **kwargs)
+        self.fields['choice_list'].choices = self.QUALITY_LIST
+        self.fields['choice_list'].label = 'Quality'
