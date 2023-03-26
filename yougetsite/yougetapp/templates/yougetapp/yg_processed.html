@@ -6,9 +6,34 @@
 {{ title }}
 {{ thumbnail }}
 {{ uploader }}
+<p>----</p>
+{{ obj.ext }}
+{{ obj.format_id }}
+{{ obj.resoslution }}
+{{ obj.codec }}
 <form id="quality_form" method="post">
   {% csrf_token %}
   {{ quality_form.as_p }}
   <input id="prepare_btn" type="submit" value="Prepare"/>
 </form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).on('submit', '#quality_form', function(e){
+    var form_data = $("#quality_form").serialize();
+    console.log(form_data)
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "{% url 'yougetapp:ygprepare' file_data.id %}",
+      data: form_data,
+      success: function(json){
+        console.log(json)
+      },
+      error: function(xhr, errmsg, err){
+        console.log(xhr.status + ":" + xhr.responseText);
+      }
+    });
+  });
+</script>
 {% endblock %}
