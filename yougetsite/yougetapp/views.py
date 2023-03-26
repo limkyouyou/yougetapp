@@ -10,6 +10,8 @@ from .utilities.get_ytinfo import get_ytinfo
 from .utilities.dl_ytfile import download_file
 
 from pathlib import Path
+from os import remove, listdir
+import shutil
 
 # Create your views here.
 
@@ -68,6 +70,18 @@ class UrlView(View):
 class ProcessView(View):
     def get(self, request, pk):
         active_file = get_object_or_404(FileData, id=pk)
+
+        dl_file_objs = DlData.objects.filter(file_deleted=False)
+        for obj in dl_file_objs:
+            if not obj.was_downloaded_recently():
+                file_dir = f'{settings.MEDIA_ROOT}/{obj.session.session_key}'
+                file_path = Path(f'{file_dir}/{obj.file.file_name}-{str(obj.id)}.{obj.quality_object.ext.ext_name}')
+                if file_path.exists():
+                    remove(file_path)
+                    obj.file_deleted = True
+                    obj.save()
+                if not listdir(file_dir):
+                    shutil.rmtree(file_dir)
 
         quality_list = request.session['quality_list']
         if len(quality_list) == 0:
