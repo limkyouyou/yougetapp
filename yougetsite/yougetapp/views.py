@@ -8,6 +8,7 @@ from .models import FileData, ExtType, AudioQuality, VideoQuality, SessionKey, D
 from .forms import UrlForm, QualityForm
 from .utilities.get_ytinfo import get_ytinfo
 from .utilities.dl_ytfile import download_file
+from .utilities.conf_title import conf_title
 
 from pathlib import Path
 from os import remove, listdir
@@ -34,7 +35,7 @@ class UrlView(View):
 
         save_file_data, create = FileData.objects.get_or_create(
             url=valid_url,
-            file_name=file_info['title'],
+            file_name=conf_title(file_info['title']),
             img_url=file_info['thumbnail'],
             uploader=file_info['uploader'],
         )
@@ -80,7 +81,7 @@ class ProcessView(View):
                     remove(file_path)
                     obj.file_deleted = True
                     obj.save()
-                if not listdir(file_dir):
+                if Path(file_dir).exists() and not listdir(file_dir):
                     shutil.rmtree(file_dir)
 
         quality_list = request.session['quality_list']
