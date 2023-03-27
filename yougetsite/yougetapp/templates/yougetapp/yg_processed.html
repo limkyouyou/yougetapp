@@ -2,6 +2,7 @@
 {% extends 'yougetapp/yg_main.html' %}
 
 {% block processed %}
+{% load static %}
 {{ url }}
 {{ title }}
 {{ thumbnail }}
@@ -14,9 +15,15 @@
 <form id="quality_form" method="post">
   {% csrf_token %}
   {{ quality_form.as_p }}
-  <input id="prepare_btn" type="submit" value="Prepare"/>
+  <div id="preparing_btn_container">
+    <input id="prepare_btn" type="submit" value="Prepare"/>
+  </div>
+  <p id="preparing_msg" style="display: none;">Preparing selected file...</p>
 </form>
 <div id="dl_btn_container"></div>
+<div id="spinner_container">
+  <img id="spinner" src="{% static 'InfinitySpinner110px.gif' %}" style="display: none;" alt="Loading.."/>
+</div>
 <div id=""back_btn_container>
   <a id="back_btn" href="{% url 'yougetapp:ygurl' %}">Download Another</a>
 </div>
@@ -24,8 +31,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script type="text/javascript">
   $(document).on('submit', '#quality_form', function(e){
+    $("#prepare_btn").toggle();
+    $("#spinner").toggle();
+    $("#preparing_msg").toggle();
     var form_data = $("#quality_form").serialize();
-    console.log(form_data)
     e.preventDefault();
     $.ajax({
       type: "POST",
@@ -33,6 +42,8 @@
       data: form_data,
       success: function(json){
         dlUrl = "window.location.href='" + "{% url 'yougetapp:download' 0 %}';".replace('0', json);
+        $("#spinner").toggle();
+        $("#preparing_msg").toggle();
         $("#dl_btn_container").append(
           '<button id="dl_btn" onclick="' + dlUrl + '" download>Download</hutton'
         );
