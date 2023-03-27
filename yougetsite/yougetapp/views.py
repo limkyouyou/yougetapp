@@ -96,6 +96,10 @@ class ProcessView(View):
         ctx['thumbnail'] = active_file.img_url
         ctx['uploader'] = active_file.uploader
 
+        if request.session['format'] == 'mp4':
+            v_dl_info = 'Video qualities are available in 480p, 720p, and +1080p.  Available webm format will be converted to mp4 file.'
+            ctx['v_dl_info'] = v_dl_info
+
         return render(request, 'yougetapp/yg_processed.html', ctx)
     
 class PrepareDownload(View):

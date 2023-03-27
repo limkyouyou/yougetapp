@@ -1,31 +1,54 @@
-
 {% extends 'yougetapp/yg_main.html' %}
 
 {% block processed %}
 {% load static %}
-{{ url }}
-{{ title }}
-{{ thumbnail }}
-{{ uploader }}
-<p>----</p>
-{{ obj.ext }}
-{{ obj.format_id }}
-{{ obj.resoslution }}
-{{ obj.codec }}
-<form id="quality_form" method="post">
-  {% csrf_token %}
-  {{ quality_form.as_p }}
-  <div id="preparing_btn_container">
-    <input id="prepare_btn" type="submit" value="Prepare"/>
+<div id="process_body">
+  <div id="process_container">
+    <div id="process_file_container">
+      <div id="img_container">
+        <img id="thumbnail" src="{{ thumbnail }}" height="180" width="320" alt="thumbnail"/>
+      </div>
+      <div id="info_container">
+        <div id="title_container">
+          <span id="title">{{ title|truncatewords:70 }}</span>
+        </div>
+        <div id="uploader_container">
+          <span id="uploader">{{ uploader|truncatewords:15 }}</span>
+        </div>
+        <div id="quality_form_container">
+          {% if no_quality %}
+          <div id="no_quality_container">
+            <span id="no_quality_msg">{{ no_quality }}</span>
+          </div>
+          {% else %}
+          <form id="quality_form" method="post">
+            {% csrf_token %}
+            <div id="quality_input_container">
+              <label id="{{ quality_form.choice_list.id_for_label }}_label" for="{{ quality_form.choice_list.id_for_label }}">{{ quality_form.choice_list.label }}:</label>
+              {{ quality_form.choice_list }}
+            </div>
+            <div id="prepare_btn_container">
+              <input id="prepare_btn" type="submit" value="Prepare"/>
+            </div>
+            <p id="preparing_msg" style="display: none;">Preparing selected file...</p>
+          </form>
+          <div id="dl_btn_container"></div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div id="spinner_container">
+      <img id="spinner" src="{% static 'InfinitySpinner110px.gif' %}" style="display: none;" alt="Loading.."/>
+    </div>
+    <div id="back_btn_container">
+      <a id="back_btn" href="{% url 'yougetapp:ygurl' %}">Download Another</a>
+    </div>
+    <div id="quality_info_container">
+      {% if v_dl_info %}
+      <span class="info">{{ v_dl_info }}</span>
+      {% endif %}
+    </div>
   </div>
-  <p id="preparing_msg" style="display: none;">Preparing selected file...</p>
-</form>
-<div id="dl_btn_container"></div>
-<div id="spinner_container">
-  <img id="spinner" src="{% static 'InfinitySpinner110px.gif' %}" style="display: none;" alt="Loading.."/>
-</div>
-<div id=""back_btn_container>
-  <a id="back_btn" href="{% url 'yougetapp:ygurl' %}">Download Another</a>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
