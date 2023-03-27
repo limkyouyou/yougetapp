@@ -3,9 +3,14 @@
 <html lang="en-us">
   <head>
     <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'yg_style.css' %}">
   </head>
   <body>
-    {% block url%}{% endblock %}
-    {% block processed %}{% endblock %}
+    <div id="app_bkg_container">
+      <div id="app_container">
+        {% block url%}{% endblock %}
+        {% block processed %}{% endblock %}
+      </div>
+    </div>
   </body>
 </html>

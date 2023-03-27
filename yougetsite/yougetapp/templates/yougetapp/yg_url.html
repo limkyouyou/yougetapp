@@ -4,8 +4,21 @@
 <div id="url_form_container">
   <form action="" method="post">
     {% csrf_token %}
-    {{ url_form.as_p }}
-    <input id="url_submit_btn" type="submit" value="Process"/>
+    <div id="url_error_container">
+      {{ url_form.url.errors }}
+    </div>
+    <div class="input_container">
+      <div id="{{ url_form.url.label }}_container">
+        <label id="{{ url_form.url.id_for_label }}_label" for="{{ url_form.url.id_for_label }}">{{ url_form.url.label }}</label>
+        {{ url_form.url }}
+      </div>
+      <div id="{{ url_form.format_choice.label }}_container">
+        {{ url_form.format_choice }}
+      </div>
+    </div>
+    <div id="url_submit_btn_container">
+      <input id="url_submit_btn" type="submit" value="Process"/>
+    </div>
   </form>
 </div>
 {% endblock %}
