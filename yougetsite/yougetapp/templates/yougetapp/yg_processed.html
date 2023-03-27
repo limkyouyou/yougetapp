@@ -30,25 +30,36 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script type="text/javascript">
-  $(document).on('submit', '#quality_form', function(e){
+  $(document).ready(function() {
+    $("#id_choice_list").change(function(){
+      if ($("#prepare_btn").css('display') == 'none') {
+        $("#prepare_btn").toggle();
+        $("#dl_btn_container").empty();
+      }
+    });
+  });
+
+  $(document).on('submit', '#quality_form', function(e) {
     $("#prepare_btn").toggle();
     $("#spinner").toggle();
     $("#preparing_msg").toggle();
     var form_data = $("#quality_form").serialize();
+    $("#id_choice_list").prop("disabled", "disabled");
     e.preventDefault();
     $.ajax({
       type: "POST",
       url: "{% url 'yougetapp:ygprepare' file_data.id %}",
       data: form_data,
-      success: function(json){
+      success: function(json) {
         dlUrl = "window.location.href='" + "{% url 'yougetapp:download' 0 %}';".replace('0', json);
         $("#spinner").toggle();
         $("#preparing_msg").toggle();
+        $("#id_choice_list").prop("disabled", false);
         $("#dl_btn_container").append(
           '<button id="dl_btn" onclick="' + dlUrl + '" download>Download</hutton'
         );
       },
-      error: function(xhr, errmsg, err){
+      error: function(xhr, errmsg, err) {
         console.log(xhr.status + ":" + xhr.responseText);
       }
     });
