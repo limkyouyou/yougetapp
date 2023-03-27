@@ -12,5 +12,5 @@ def clean_char(char: str):
     return False
 
 def conf_title(title: str):
-    cleaned_words = ' '.join([word for word in title.split(' ') if word not in restricted_words])
-    return ''.join(map(lambda x : swap_restricted_char(x, restricted_chars), filter(lambda y : clean_char(y), cleaned_words))).strip()
+    cleaned_chars = ''.join(map(lambda x : swap_restricted_char(x, restricted_chars), filter(lambda y : clean_char(y), title))).strip()
+    return ' '.join([word for word in cleaned_chars.split(' ') if word not in restricted_words]).strip()
